@@ -166,27 +166,14 @@ int main(int argc, char **argv)
 			tmp[i] = L >> ((psize - i - 1) * 8);
 		}
 	}
-	printf("\n");
 	cnt.msg_bin = tmp;		//assigning tmp to cnt.msg_bin
-	
-	for(int i = 0; i < psize; ++i)
-	{
-		if(i % 4 == 0)
-		{
-			printf("\n");
-		}
-		printf("%02x ", cnt.msg_bin[i]);
-	}
-	printf("\nsize of padded message = %d x 512 bits", (psize * 8) / 512);
-	printf("\n");
-	
+
 	//breaking message into 512 bit chunks
 	//Making a message schedule consisting of 32 bit words
 	int number_of_chunks;
 	number_of_chunks = (L + 1 + K + 64) / 512;
 	for(int break_point = 0; break_point < number_of_chunks; ++break_point)
 	{
-		printf("\n %d. \n", break_point);
 		for(int i = 0; i < 64; ++i)
 		{
 			if(i * 4 < 64)
@@ -196,7 +183,6 @@ int main(int argc, char **argv)
 						(cnt.msg_bin[j + 1] << (8 * 2)) | 
 						(cnt.msg_bin[j + 2] << (8 * 1)) | 
 						(cnt.msg_bin[j + 3] << 0);
-				printf("%04x\n", cnt.w[i]);
 			}
 			else if(i >= 16)
 			{
@@ -210,7 +196,6 @@ int main(int argc, char **argv)
 				s1 = rightrotate32(cnt.w[i - 2], 17) ^ rightrotate32(cnt.w[i - 2], 19) ^ (cnt.w[i - 2] >> 10);
 				cnt.w[i] = cnt.w[i - 16] + s0 + cnt.w[i - 7] + s1;
 			}
-			//printf("%02d. %08x \n",i , cnt.w[i]);
 		}
 		uint32_t a, b, c, d, e, f, g, h;
 		a = cnt.h[0];
@@ -269,12 +254,13 @@ int main(int argc, char **argv)
 		cnt.h[6] += g;
 		cnt.h[7] += h;
 	}
-	printf("\n");
+	
+	FILE *fp = fopen("sha256_result.txt", "w+");
 	for(int i = 0; i < 8; ++i)
 	{
-		printf("%08x", cnt.h[i]);
+		fprintf(fp, "%08x", cnt.h[i]);
 	}
-	printf("\n");
+	fclose(fp);
 	return 0;
 }
 
