@@ -132,10 +132,11 @@ int main(int argc, char **argv)
 	{
 		uint32_t s0, s1, ch, temp1, temp2, maj;
 		s1 = rightrotate32(e, 6) ^ rightrotate32(e, 11) ^ rightrotate32(e, 25);
-		ch = (e & f) ^((~e) & g);
+		ch = (e & f) ^ ((~e) & g);
 		temp1 = h + s1 + ch + cnt.k[i] + cnt.w[i];
 		s0 = rightrotate32(a, 2) ^ rightrotate32(a, 13) ^ rightrotate32(a, 22);
 		maj = (a & b) ^ (a & c) ^ (b & c);
+		temp2 = s0 + maj;
 		
 		h = g;
 		g = f;
